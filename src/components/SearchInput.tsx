@@ -1,17 +1,5 @@
 import React from "react";
 import { AiOutlineSearch } from "react-icons/ai";
-const suggestions = [
-  "New York",
-  "Los Angeles",
-  "Chicago",
-  "Houston",
-  "Phoenix",
-  "Philadelphia",
-  "San Antonio",
-  "San Diego",
-  "Dallas",
-  "Austin",
-];
 
 const SearchInput = () => {
   return (
