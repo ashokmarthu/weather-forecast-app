@@ -1,10 +1,5 @@
 import moment from "moment";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { WeatherData } from "@/api/types";
 import { LuSunrise, LuSunset, LuCompass, LuGauge } from "react-icons/lu";
 
@@ -65,7 +60,7 @@ const WeatherDetails = ({ data }: weatherDetailsProps) => {
   ];
 
   return (
-    <Card className="bg-[#18181b] text-white justify-start">
+    <Card className="justify-start">
       <CardHeader>
         <CardTitle>Weather Details</CardTitle>
       </CardHeader>

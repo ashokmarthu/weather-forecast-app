@@ -8,44 +8,48 @@ import { setForecastInfo } from "@/store/forecastSlice";
 import WeatherDetails from "./WeatherDetails";
 import HourlyTemp from "./HourlyTemp";
 import CurrentWeather from "./CurrentWeather";
+import useGeoLocation from "@/hooks/useGeoLocation";
+import Skeleton from "./Skeleton";
+import { Snackbar } from "./SnackBar";
+import { weatherAPI } from "@/api/Weather";
+import ForecastData from "./ForecastData";
 
 const WeatherDashboard = () => {
-  const dispatch = useDispatch();
   const weatherInfo = useSelector((store: RootState) => store.weatherInfo);
-  // const forecastInfo = useSelector((store: RootState) => store.forecast);
-
+  const forecastInfo = useSelector((store: RootState) => store.forecast);
+  const dispatch = useDispatch();
+  const { coordinates, errorMsg, isLoading } = useGeoLocation();
   const fetchData = async () => {
-    const COMMON_URL = `https://api.openweathermap.org/data/2.5`;
-    const API_KEY = "ede7c27a2de20af4c4ea03d67bc6d5f4";
-    const WEATHER_URL = `${COMMON_URL}/weather?q=${"pune"}&appid=${API_KEY}`;
-    const FORECAST_URL = `${COMMON_URL}/forecast?q=${"pune"}&appid=${API_KEY}`;
     try {
       const [weatherRes, foreCastRes] = await Promise.all([
-        fetch(WEATHER_URL),
-        fetch(FORECAST_URL),
+        weatherAPI.getCurrentWeather(coordinates),
+        weatherAPI.getForecast(coordinates),
       ]);
-      const weatherData = await weatherRes.json();
-      const forecastData = await foreCastRes.json();
-      dispatch(setWeatherInfo(weatherData));
-      dispatch(setForecastInfo(forecastData));
+      dispatch(setWeatherInfo(weatherRes));
+      dispatch(setForecastInfo(foreCastRes));
     } catch (err) {
       console.log("Error fetching weather data:", err);
     }
   };
-
   useEffect(() => {
     fetchData();
   }, []);
 
+  if (isLoading) {
+    return <Skeleton />;
+  }
+  if (errorMsg) {
+    return <Snackbar errMsg={errorMsg} />;
+  }
   return (
-    <div className="grid gap-6 md:grid-cols-2 bg-black">
+    <div className="grid gap-6 md:grid-cols-2">
       <div className="space-y-4">
-        <CurrentWeather data={weatherInfo} location="Pune" />
+        <CurrentWeather data={weatherInfo} location="Bangalore" />
         <WeatherDetails data={weatherInfo} />
       </div>
       <div className="space-y-4">
-        <HourlyTemp />
-        <WeatherDetails data={weatherInfo} />
+        <HourlyTemp data={forecastInfo} />
+        <ForecastData data={forecastInfo} />
       </div>
     </div>
   );

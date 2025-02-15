@@ -1,4 +1,6 @@
+"use client";
 import { Card, CardContent } from "@/components/ui/card";
+import Image from "next/image";
 import { WeatherData } from "@/api/types";
 import { TbDroplets } from "react-icons/tb";
 import { WiStrongWind } from "react-icons/wi";
@@ -14,10 +16,11 @@ const CurrentWeather = ({ data, location }: weatherDetailsProps) => {
     wind: { speed },
     sys: { country },
   } = data;
+  const { icon, description } = data?.weather[0] || {};
   return (
-    <Card className="overflow-hidden bg-[#18181b] text-white justify-start">
+    <Card className="overflow-hidden justify-start">
       <CardContent className="p-6">
-        <div className="grid gap-6">
+        <div className="grid gap-6 md:grid-cols-2">
           <div className="space-y-4">
             <div className="space-y-2">
               <div className="flex items-center">
@@ -47,20 +50,35 @@ const CurrentWeather = ({ data, location }: weatherDetailsProps) => {
                 </div>
               </div>
             </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex items-center gap-2">
-              <TbDroplets className="h-8 w-8" />
-              <div className="space-y-0.5">
-                <p className="text-sm font-medium">Humidity</p>
-                <p className="text-sm text-muted-foreground">{humidity}%</p>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex items-center gap-2">
+                <TbDroplets className="h-8 w-8" />
+                <div className="space-y-0.5">
+                  <p className="text-sm font-medium">Humidity</p>
+                  <p className="text-sm text-muted-foreground">{humidity}%</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <WiStrongWind className="h-8 w-8" />
+                <div className="space-y-0.5">
+                  <p className="text-sm font-medium">Wind Speed</p>
+                  <p className="text-sm text-muted-foreground">{speed} m/s</p>
+                </div>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <WiStrongWind className="h-8 w-8" />
-              <div className="space-y-0.5">
-                <p className="text-sm font-medium">Wind Speed</p>
-                <p className="text-sm text-muted-foreground">{speed} m/s</p>
+          </div>
+          <div className="flex flex-col items-center justify-center">
+            <div className="relative flex aspect-square w-full max-w-[200px] items-center justify-center bg-transparent">
+              <Image
+                width={100}
+                height={100}
+                src={`https://openweathermap.org/img/wn/${icon}@4x.png`}
+                alt={description}
+                loading="lazy"
+                className="h-full w-full object-contain"
+              />
+              <div className="absolute bottom-0 text-center">
+                <p className="text-sm font-medium capitalize">{description}</p>
               </div>
             </div>
           </div>

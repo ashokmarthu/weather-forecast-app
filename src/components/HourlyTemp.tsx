@@ -1,83 +1,105 @@
-"use client";
-
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-];
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import type { ForecastData } from "@/api/types";
+import moment from "moment";
 
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "hsl(var(--chart-1))",
-  },
-} satisfies ChartConfig;
+interface HourlyTemperatureProps {
+  data: ForecastData;
+}
 
-const HourlyTemp = () => {
+interface ChartData {
+  time: string;
+  temp: number;
+  feels_like: number;
+}
+
+export function HourlyTemp({ data }: HourlyTemperatureProps) {
+  const chartData: ChartData[] = data.list.slice(0, 7).map((item) => ({
+    time: moment(new Date(item.dt * 1000)).format("LT"),
+    temp: Math.round(item.main.temp),
+    feels_like: Math.round(item.main.feels_like),
+  }));
+console.log(chartData)
   return (
-    <Card className="bg-[#18181b] text-white justify-start">
+    <Card className="flex-1">
       <CardHeader>
-        <CardTitle>{`Today's Temperature`}</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Today Temperature</CardTitle>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
-          <LineChart
-            accessibilityLayer
-            data={chartData}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
-          >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
-            />
-            <YAxis
-              dataKey="desktop"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-            />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
-            <Line
-              dataKey="desktop"
-              type="natural"
-              stroke="var(--color-desktop)"
-              strokeWidth={2}
-              dot={false}
-            />
-          </LineChart>
-        </ChartContainer>
+        <div className="h-[200px] w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={chartData}>
+              <XAxis
+                dataKey="time"
+                stroke="#888888"
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
+              />
+              <YAxis
+                dataKey="temp"
+                stroke="#888888"
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
+              />
+              <Tooltip
+                content={({ active, payload }) => {
+                  if (active && payload && payload.length) {
+                    return (
+                      <div className="rounded-lg border bg-background p-2 shadow-sm">
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="flex flex-col">
+                            <span className="text-[0.70rem] uppercase text-muted-foreground">
+                              Temperature
+                            </span>
+                            <span className="font-bold">
+                              {payload[0].value}°
+                            </span>
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-[0.70rem] uppercase text-muted-foreground">
+                              Feels Like
+                            </span>
+                            <span className="font-bold">
+                              {payload[1].value}°
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  }
+                  return null;
+                }}
+              />
+              <Line
+                type="monotone"
+                dataKey="temp"
+                stroke="#2563eb"
+                strokeWidth={2}
+                dot={false}
+              />
+              <Line
+                type="monotone"
+                dataKey="feels_like"
+                stroke="#64748b"
+                strokeWidth={2}
+                dot={false}
+                strokeDasharray="5 5"
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
       </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm"></CardFooter>
     </Card>
   );
-};
+}
+
 export default HourlyTemp;
