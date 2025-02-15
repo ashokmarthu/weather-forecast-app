@@ -31,11 +31,11 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const HourlyTemp = ({data}:Fo) => {
+const HourlyTemp = () => {
   return (
     <Card className="bg-[#18181b] text-white justify-start">
       <CardHeader>
-        <CardTitle>Today's Temperature</CardTitle>
+        <CardTitle>{`Today's Temperature`}</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent>

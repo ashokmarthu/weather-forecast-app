@@ -34,7 +34,6 @@ const weatherInfoSlice = createSlice({
   initialState,
   reducers: {
     setWeatherInfo: (state, action: PayloadAction<WeatherData>) => {
-      console.log(action.payload);
       state.coord = action.payload.coord;
       state.weather = action.payload.weather;
       state.main = action.payload.main;

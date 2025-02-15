@@ -12,8 +12,8 @@ import CurrentWeather from "./CurrentWeather";
 const WeatherDashboard = () => {
   const dispatch = useDispatch();
   const weatherInfo = useSelector((store: RootState) => store.weatherInfo);
-  const forecastInfo = useSelector((store: RootState) => store.forecast);
-  console.log(forecastInfo, "hello");
+  // const forecastInfo = useSelector((store: RootState) => store.forecast);
+
   const fetchData = async () => {
     const COMMON_URL = `https://api.openweathermap.org/data/2.5`;
     const API_KEY = "ede7c27a2de20af4c4ea03d67bc6d5f4";
