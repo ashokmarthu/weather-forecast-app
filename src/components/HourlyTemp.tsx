@@ -26,7 +26,6 @@ export function HourlyTemp({ data }: HourlyTemperatureProps) {
     temp: Math.round(item.main.temp),
     feels_like: Math.round(item.main.feels_like),
   }));
-console.log(chartData)
   return (
     <Card className="flex-1">
       <CardHeader>

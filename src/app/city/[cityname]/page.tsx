@@ -1,7 +1,17 @@
 import React from "react";
 
-const page = () => {
-  return <div>Hello from Page</div>;
+type PageProps = {
+  params: Promise<{cityname:string}>;
 };
 
-export default page;
+const Page = async ({ params }: PageProps) => {
+  const { cityname } = await params;
+
+  return (
+    <div>
+      <h1>Weather for {cityname}</h1>
+    </div>
+  );
+};
+
+export default Page;

@@ -13,19 +13,20 @@ const useGeoLocation = () => {
       lon: 77.5946,
     },
     errorMsg: null,
-    isLoading: true,
+    isLoading: false,
   });
   const userLocation = async () => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        setLocationData({
+        setLocationData((prev) => ({
+          ...prev,
           coordinates: {
             lat: pos.coords.latitude,
             lon: pos.coords.longitude,
           },
           errorMsg: null,
           isLoading: false,
-        });
+        }));
         return;
       },
       (error) => {
@@ -50,11 +51,12 @@ const useGeoLocation = () => {
           isLoading: false,
         }));
         return;
-      }
+      },
+      { enableHighAccuracy: true, timeout: 5000 }
     );
   };
   useEffect(() => {
-    setLocationData((prev) => ({ ...prev, setLoading: true }));
+    setLocationData((prev) => ({ ...prev, isLoading: true }));
     userLocation();
   }, []);
   return {

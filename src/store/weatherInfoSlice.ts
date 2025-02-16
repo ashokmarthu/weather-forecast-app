@@ -2,7 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { WeatherData } from "@/api/types";
 
-const initialState: WeatherData = {
+interface State extends WeatherData {
+  weatherInfoLoading: boolean;
+  weatherInfoError: boolean;
+}
+
+const initialState: State = {
   coord: {
     lat: 0,
     lon: 0,
@@ -27,6 +32,8 @@ const initialState: WeatherData = {
   },
   name: "",
   dt: 0,
+  weatherInfoLoading: false,
+  weatherInfoError: false,
 };
 
 const weatherInfoSlice = createSlice({
@@ -34,16 +41,20 @@ const weatherInfoSlice = createSlice({
   initialState,
   reducers: {
     setWeatherInfo: (state, action: PayloadAction<WeatherData>) => {
-      state.coord = action.payload.coord;
-      state.weather = action.payload.weather;
-      state.main = action.payload.main;
-      state.wind = action.payload.wind;
-      state.sys = action.payload.sys;
-      state.name = action.payload.name;
-      state.dt = action.payload.dt;
+      return {
+        ...state,
+        ...action.payload,
+      };
+    },
+    setWeatherInfoLoading: (state, action: PayloadAction<boolean>) => {
+      state.weatherInfoLoading = action.payload;
+    },
+    setWeatherInfoError: (state, action: PayloadAction<boolean>) => {
+      state.weatherInfoError = action.payload;
     },
   },
 });
 
-export const { setWeatherInfo } = weatherInfoSlice.actions;
+export const { setWeatherInfo, setWeatherInfoLoading, setWeatherInfoError } =
+  weatherInfoSlice.actions;
 export default weatherInfoSlice.reducer;
