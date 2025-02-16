@@ -7,7 +7,7 @@ export function Snackbar({
   errMsg = "Your session has expired. Please log in again",
 }: ISnackBarProps) {
   return (
-    <Alert>
+    <Alert variant="destructive">
       <AlertTitle>Error</AlertTitle>
       <AlertDescription>{errMsg}</AlertDescription>
     </Alert>
