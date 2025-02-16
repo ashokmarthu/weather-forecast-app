@@ -6,7 +6,7 @@ import { useTheme } from "next-themes";
 const Navbar = () => {
   const { setTheme } = useTheme();
   return (
-    <header className="sticky top-0 z-5 w-full border-b bg-background/95 backdrop-blur py-2">
+    <header className="sticky top-0 z-10 w-full border-b bg-background/95 backdrop-blur py-2">
       <div className="grid grid-cols-1 md:grid-cols-4 justify-items-center items-center w-full">
         <div className="">
           <TiWeatherPartlySunny className="w-14 h-14" />
