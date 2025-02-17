@@ -6,51 +6,36 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { RootState } from "@/store/store";
 import { setSearchByOption } from "@/store/userSelectionSlice";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-
-interface SearchOption {
-  name: "zip" | "cityname";
-  selected: boolean;
-}
+import { useDispatch, useSelector } from "react-redux";
 
 const SearchByOptions = () => {
-  const searchByOptions: SearchOption[] = [
-    {
-      name: "zip",
-      selected: false,
-    },
-    {
-      name: "cityname",
-      selected: false,
-    },
-  ];
-  const [searchOptions, setSearchOptions] =
-    useState<SearchOption[]>(searchByOptions);
+  const searchBy = useSelector(
+    (store: RootState) => store.userSelection.searchBy
+  );
+  const searchByOptions: Array<string> = ["city name", "zip and Countycode"];
   const dispatch = useDispatch();
   const handleSelectChange = (value: string) => {
     dispatch(setSearchByOption(value));
-    localStorage.setItem("searchBy", value);
-    setSearchOptions((prev) =>
-      prev.map((option) =>
-        option.name === value
-          ? { ...option, selected: !option.selected }
-          : option
-      )
-    );
   };
 
   return (
-    <Select onValueChange={handleSelectChange}>
-      <SelectTrigger className="w-[280px]">
-        <SelectValue placeholder="Select a SearchByOption" />
+    <Select value={searchBy} onValueChange={handleSelectChange}>
+      <SelectTrigger className="w-[200px] capitalize outline-none ring-0 focus-visible:ring-offset-0 focus-visible:ring-0">
+        <SelectValue placeholder="Select a search category" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          {searchOptions.map((item) => (
-            <SelectItem key={item.name} value={item.name}>
-              {item.name}
+          {searchByOptions.map((item: string) => (
+            <SelectItem
+              key={item}
+              value={item}
+              className={`capitalize ${
+                item === searchBy ? "text-purple-400/70" : "text-black-200"
+              }`}
+            >
+              {item}
             </SelectItem>
           ))}
         </SelectGroup>

@@ -14,12 +14,14 @@ import { useDispatch, useSelector } from "react-redux";
 
 const SearchCity = () => {
   const dispatch = useDispatch();
-  const unitType = useSelector((store: RootState) => store.userSelection.units);
+  const { units, searchBy } = useSelector(
+    (store: RootState) => store.userSelection
+  );
   const [cityname, setCityname] = useState<string>("");
 
   const getResponse = async (): Promise<void> => {
     weatherAPI
-      .getGeoCode(cityname, unitType)
+      .getGeoCode(cityname, units)
       .then((data: GeocodingResponse[]) => {
         if (data && data.length > 0) {
           const coords = {
@@ -27,8 +29,8 @@ const SearchCity = () => {
             lon: data[0].lon,
           };
           Promise.all([
-            weatherAPI.getCurrentWeather(coords, unitType),
-            weatherAPI.getForecast(coords, unitType),
+            weatherAPI.getCurrentWeather(coords, units),
+            weatherAPI.getForecast(coords, units),
           ])
             .then(([weatherRes, forecastRes]) => {
               dispatch(setWeatherData(weatherRes));
@@ -57,21 +59,36 @@ const SearchCity = () => {
     getResponse();
   };
   return (
-    <div className="relative flex justify-end items-center w-full">
-      <input
-        placeholder="Search city"
-        className="h-10 outline-none border px-2 shadow bg-gray-400/20 rounded w-full pr-8"
-        maxLength={50}
-        onChange={(e) => setCityname(e.target.value)}
-      />
-      <button
-        className="h-full bg-blue-400/20 rounded w-7 disabled:bg-gray-400/20 "
-        disabled={cityname.trim().length === 0}
-        onClick={handleCityName}
-      >
-        <IoSearchOutline className="w-8 h-8 px-2" />
-      </button>
-    </div>
+    <>
+      <div>
+        <div className="relative flex justify-end items-center w-full">
+          <input
+            placeholder={`${
+              searchBy === "city name"
+                ? "Please search by city name (Ex:- Bengaluru)"
+                : "Search By comma separated pincode and countrycode (Ex:- Newyork,US)"
+            }`}
+            className="h-10 text-xs outline-none border px-2 shadow bg-gray-400/20 rounded w-full pr-8"
+            maxLength={40}
+            onChange={(e) => setCityname(e.target.value)}
+          />
+          <button
+            className="h-full bg-blue-400/20 rounded w-7 disabled:bg-gray-400/20 absolute"
+            disabled={cityname.trim().length === 0}
+            onClick={handleCityName}
+          >
+            <IoSearchOutline className="w-8 h-8 px-2" />
+          </button>
+        </div>
+        <small
+          className={`text-muted-foreground ${
+            cityname.length === 40 ? "text-red-500/90" : ""
+          }`}
+        >
+          Maxmimum 40 Characters Allowed
+        </small>
+      </div>
+    </>
   );
 };
 

@@ -17,7 +17,7 @@ const initialState: UserSeletions = {
   isGeoLocationLoading: false,
   isSearchLoading: false,
   isSearchError: "",
-  searchBy: "",
+  searchBy: "city name",
   units: "",
   favourites: [],
   city: "",

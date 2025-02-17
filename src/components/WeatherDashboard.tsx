@@ -5,15 +5,16 @@ import CurrentWeather from "./CurrentWeather";
 import Skeleton from "./Skeleton";
 import { Snackbar } from "./SnackBar";
 import ForecastData from "./ForecastData";
-import SearchType from "./SearchType";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { WeatherData, ForecastData as FCast } from "@/api/types";
 import { setWeatherData } from "@/store/weatherDataSlice";
 import { RootState } from "@/store/store";
 import { setForecastData } from "@/store/forecastDataSlice";
 import { setUnitConversion } from "@/store/userSelectionSlice";
 import SearchCity from "./SearchCity";
+import SearchByOptions from "./SearchByOptions";
+import Offline from "./Offline";
 interface Props {
   weatherRes: WeatherData | null;
   foreCastRes: FCast | null;
@@ -27,6 +28,7 @@ const WeatherDashboard = ({
   hasError,
   units,
 }: Props) => {
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
   const dispatch = useDispatch();
   const { weatherData, isWeatherDataLoading, isWeatherDataError } = useSelector(
     (store: RootState) => store.weatherData
@@ -36,6 +38,18 @@ const WeatherDashboard = ({
   const { isGeoLocationLoading, isGeoLocationError } = useSelector(
     (store: RootState) => store.userSelection
   );
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, [isOnline]);
 
   useEffect(() => {
     if (weatherRes && foreCastRes) {
@@ -44,30 +58,41 @@ const WeatherDashboard = ({
       dispatch(setUnitConversion(units));
     }
   }, [weatherRes, foreCastRes, hasError, dispatch, units]);
-
+  if (!isOnline) {
+    return <Offline />;
+  }
   if (isWeatherDataLoading || isForecastDataLoading || isGeoLocationLoading) {
     return <Skeleton />;
   }
 
-  if (
-    isWeatherDataError ||
-    isForecastDataError ||
-    isGeoLocationError ||
-    hasError
-  ) {
+  if (isWeatherDataError) {
+    return <Snackbar errMsg={isWeatherDataError} />;
+  } else if (isForecastDataError) {
     return <Snackbar errMsg={isForecastDataError} />;
+  } else if (isGeoLocationError) {
+    return <Snackbar errMsg={isGeoLocationError} />;
+  } else if (hasError) {
+    return <Snackbar errMsg={hasError} />;
   }
+
   return weatherData && forecastData ? (
-    <div className="grid gap-6 md:grid-cols-2">
-      <div className="space-y-4">
-        <SearchType />
+    <div className="space-y-2">
+      <div className="grid gap-6 md:grid-cols-2">
         <SearchCity />
-        <CurrentWeather weatherInfo={weatherData} location={weatherData.name} />
-        <WeatherDetails weatherInfo={weatherData} />
+        <SearchByOptions />
       </div>
-      <div className="space-y-4">
-        <HourlyTemp forecastInfo={forecastData} />
-        <ForecastData forecastInfo={forecastData} />
+      <div className="grid gap-6 md:grid-cols-2">
+        <div className="space-y-4">
+          <CurrentWeather
+            weatherInfo={weatherData}
+            location={weatherData.name}
+          />
+          <WeatherDetails weatherInfo={weatherData} />
+        </div>
+        <div className="space-y-4">
+          <HourlyTemp forecastInfo={forecastData} />
+          <ForecastData forecastInfo={forecastData} />
+        </div>
       </div>
     </div>
   ) : (

@@ -62,6 +62,7 @@ const Navigation = () => {
   };
 
   const handleChange = () => {
+    dispatch(setGeoLocationError(""));
     dispatch(setGeoLocationLoader(true));
     userLocation();
   };
