@@ -5,14 +5,13 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  SelectLabel
 } from "@/components/ui/select";
-import { setSearchByOption } from "@/store/userPreferenceSlice";
+import { setSearchByOption } from "@/store/userSelectionSlice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
 interface SearchOption {
-  name: "zip" | "weather";
+  name: "zip" | "cityname";
   selected: boolean;
 }
 
@@ -23,7 +22,7 @@ const SearchByOptions = () => {
       selected: false,
     },
     {
-      name: "weather",
+      name: "cityname",
       selected: false,
     },
   ];
@@ -49,7 +48,6 @@ const SearchByOptions = () => {
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-        <SelectLabel>Fruits</SelectLabel>
           {searchOptions.map((item) => (
             <SelectItem key={item.name} value={item.name}>
               {item.name}

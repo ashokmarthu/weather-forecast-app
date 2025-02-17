@@ -6,17 +6,17 @@ import { TbDroplets } from "react-icons/tb";
 import { WiStrongWind } from "react-icons/wi";
 import { RiArrowUpDownLine, RiArrowUpDownFill } from "react-icons/ri";
 type weatherDetailsProps = {
-  data: WeatherData;
+  weatherInfo: WeatherData;
   location: string;
 };
 const formatTemp = (temp: number) => `${Math.round(temp)}°`;
-const CurrentWeather = ({ data, location }: weatherDetailsProps) => {
+const CurrentWeather = ({ weatherInfo, location }: weatherDetailsProps) => {
   const {
     main: { temp, feels_like, temp_min, temp_max, humidity },
     wind: { speed },
     sys: { country },
-  } = data;
-  const { icon, description } = data?.weather[0] || {};
+  } = weatherInfo;
+  const { icon, description } = weatherInfo?.weather[0] || {};
   return (
     <Card className="overflow-hidden justify-start">
       <CardContent className="p-6">

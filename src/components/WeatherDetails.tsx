@@ -4,11 +4,11 @@ import { WeatherData } from "@/api/types";
 import { LuSunrise, LuSunset, LuCompass, LuGauge } from "react-icons/lu";
 
 type weatherDetailsProps = {
-  data: WeatherData;
+  weatherInfo: WeatherData;
 };
 
-const WeatherDetails = ({ data }: weatherDetailsProps) => {
-  const { wind, sys, main } = data;
+const WeatherDetails = ({ weatherInfo }: weatherDetailsProps) => {
+  const { wind, sys, main } = weatherInfo;
 
   function getWindDirection(deg: number, speed: number): string {
     const directions = [

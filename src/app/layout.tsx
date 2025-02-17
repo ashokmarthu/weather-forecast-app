@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/context/theme-provider";
 import ReduxProvider from "@/store/Provider";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 export const metadata: Metadata = {
   title: "Weather APP",
@@ -14,18 +17,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body>
-        <ReduxProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-          </ThemeProvider>
-        </ReduxProvider>
+        <ErrorBoundary>
+          <ReduxProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+              storageKey="theme"
+            >
+              <div className="flex flex-col px-2 w-full">
+                <Navbar />
+                <main className="min-h-screen container mx-auto px-4 py-8 min-w-full">
+                  {children}
+                </main>
+                <Footer />
+              </div>
+            </ThemeProvider>
+          </ReduxProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

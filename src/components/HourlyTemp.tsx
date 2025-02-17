@@ -11,7 +11,7 @@ import type { ForecastData } from "@/api/types";
 import moment from "moment";
 
 interface HourlyTemperatureProps {
-  data: ForecastData;
+  forecastInfo: ForecastData;
 }
 
 interface ChartData {
@@ -20,8 +20,8 @@ interface ChartData {
   feels_like: number;
 }
 
-export function HourlyTemp({ data }: HourlyTemperatureProps) {
-  const chartData: ChartData[] = data.list.slice(0, 7).map((item) => ({
+export function HourlyTemp({ forecastInfo }: HourlyTemperatureProps) {
+  const chartData: ChartData[] = forecastInfo.list.slice(0, 7).map((item) => ({
     time: moment(new Date(item.dt * 1000)).format("LT"),
     temp: Math.round(item.main.temp),
     feels_like: Math.round(item.main.feels_like),

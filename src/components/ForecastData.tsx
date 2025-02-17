@@ -20,10 +20,11 @@ import type { ForecastData } from "@/api/types";
 import moment from "moment";
 
 interface WeatherForecastProps {
-  data: ForecastData;
+  forecastInfo: ForecastData;
 }
-const ForecastData = ({ data }: WeatherForecastProps) => {
-  const dailyForecasts = data.list.reduce((acc, curr) => {
+const ForecastData = ({ forecastInfo }: WeatherForecastProps) => {
+  
+  const dailyForecasts = forecastInfo.list.reduce((acc, curr) => {
     const date: string = moment(curr.dt).format("LT");
     if (!acc[date]) {
       acc[date] = {

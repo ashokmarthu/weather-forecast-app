@@ -4,6 +4,7 @@ export interface Coordinates {
 }
 
 export interface GeocodingResponse {
+  length: number;
   name: string;
   local_names?: Record<string, string>;
   lat: number;
@@ -60,4 +61,13 @@ export interface ForecastData {
     population: number;
     timezone: number;
   };
+}
+
+export interface GeocodingResponse {
+  name: string;
+  local_names?: Record<string, string>;
+  lat: number;
+  lon: number;
+  country: string;
+  state?: string;
 }

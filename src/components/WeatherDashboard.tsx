@@ -1,67 +1,73 @@
 "use client";
-
-import { useEffect, useCallback, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import {
-  setWeatherInfo,
-  setWeatherInfoLoading,
-} from "@/store/weatherInfoSlice";
-import { setForecastInfo } from "@/store/forecastSlice";
 import WeatherDetails from "./WeatherDetails";
 import HourlyTemp from "./HourlyTemp";
 import CurrentWeather from "./CurrentWeather";
-import useGeoLocation from "@/hooks/useGeoLocation";
 import Skeleton from "./Skeleton";
 import { Snackbar } from "./SnackBar";
-import { weatherAPI } from "@/api/Weather";
 import ForecastData from "./ForecastData";
-import { Coordinates } from "@/api/types";
+import SearchType from "./SearchType";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { WeatherData, ForecastData as FCast } from "@/api/types";
+import { setWeatherData } from "@/store/weatherDataSlice";
+import { RootState } from "@/store/store";
+import { setForecastData } from "@/store/forecastDataSlice";
+import { setUnitConversion } from "@/store/userSelectionSlice";
+import SearchCity from "./SearchCity";
+interface Props {
+  weatherRes: WeatherData | null;
+  foreCastRes: FCast | null;
+  hasError: string;
+  units: string;
+}
 
-const WeatherDashboard = () => {
-  const [weatherLoading, setWeatherLoading] = useState(true);
-  const weatherInfo = useSelector((store: RootState) => store.weatherInfo);
-  const forecastInfo = useSelector((store: RootState) => store.forecast);
+const WeatherDashboard = ({
+  weatherRes,
+  foreCastRes,
+  hasError,
+  units,
+}: Props) => {
   const dispatch = useDispatch();
-  const { coordinates, errorMsg, isLoading } = useGeoLocation();
-  const fetchData = useCallback(async (coordinates: Coordinates) => {
-    dispatch(setWeatherInfoLoading(true));
-    try {
-      const [weatherRes, foreCastRes] = await Promise.all([
-        weatherAPI.getCurrentWeather(coordinates),
-        weatherAPI.getForecast(coordinates),
-      ]);
-      dispatch(setWeatherInfo(weatherRes));
-      dispatch(setForecastInfo(foreCastRes));
-      setWeatherLoading(false);
-    } catch (err: unknown) {
-      // dispatch(setWeatherInfoError(err?.message || "Something went wrong"));
-      console.error("Error fetching weather data:", err);
-    }
-    dispatch(setWeatherInfoLoading(false));
-  }, []);
+  const { weatherData, isWeatherDataLoading, isWeatherDataError } = useSelector(
+    (store: RootState) => store.weatherData
+  );
+  const { forecastData, isForecastDataError, isForecastDataLoading } =
+    useSelector((store: RootState) => store.forecastData);
+  const { isGeoLocationLoading, isGeoLocationError } = useSelector(
+    (store: RootState) => store.userSelection
+  );
 
   useEffect(() => {
-    fetchData(coordinates);
-  }, [coordinates.lat, coordinates.lon]);
+    if (weatherRes && foreCastRes) {
+      dispatch(setWeatherData(weatherRes));
+      dispatch(setForecastData(foreCastRes));
+      dispatch(setUnitConversion(units));
+    }
+  }, [weatherRes, foreCastRes, hasError, dispatch, units]);
 
-  if (isLoading || weatherInfo.weatherInfoLoading) {
+  if (isWeatherDataLoading || isForecastDataLoading || isGeoLocationLoading) {
     return <Skeleton />;
   }
 
-  if (errorMsg || weatherInfo.weatherInfoError) {
-    return <Snackbar errMsg={errorMsg || ""} />;
+  if (
+    isWeatherDataError ||
+    isForecastDataError ||
+    isGeoLocationError ||
+    hasError
+  ) {
+    return <Snackbar errMsg={isForecastDataError} />;
   }
-
-  return !weatherLoading ? (
+  return weatherData && forecastData ? (
     <div className="grid gap-6 md:grid-cols-2">
       <div className="space-y-4">
-        <CurrentWeather data={weatherInfo} location="Bangalore" />
-        <WeatherDetails data={weatherInfo} />
+        <SearchType />
+        <SearchCity />
+        <CurrentWeather weatherInfo={weatherData} location={weatherData.name} />
+        <WeatherDetails weatherInfo={weatherData} />
       </div>
       <div className="space-y-4">
-        <HourlyTemp data={forecastInfo} />
-        <ForecastData data={forecastInfo} />
+        <HourlyTemp forecastInfo={forecastData} />
+        <ForecastData forecastInfo={forecastData} />
       </div>
     </div>
   ) : (

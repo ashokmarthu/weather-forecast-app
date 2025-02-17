@@ -1,15 +1,12 @@
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface ISnackBarProps {
-  errMsg: string;
+  errMsg: string | null;
 }
-export function Snackbar({
-  errMsg = "Your session has expired. Please log in again",
-}: ISnackBarProps) {
+export function Snackbar({ errMsg }: ISnackBarProps) {
   return (
     <Alert variant="destructive">
-      <AlertTitle>Error</AlertTitle>
-      <AlertDescription>{errMsg}</AlertDescription>
+      <AlertDescription>{errMsg || "Something wrong.."}</AlertDescription>
     </Alert>
   );
 }

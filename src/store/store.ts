@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import weatherInfoSlice from "./weatherInfoSlice";
-import foreCastSlice from "./forecastSlice";
+import weatherData from "./weatherDataSlice";
+import forecastData from "./forecastDataSlice";
+import userSelection from "./userSelectionSlice";
 export const store = configureStore({
   reducer: {
-    weatherInfo: weatherInfoSlice,
-    forecast: foreCastSlice,
+    weatherData: weatherData,
+    forecastData: forecastData,
+    userSelection: userSelection,
   },
 });
 
