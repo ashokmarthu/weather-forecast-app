@@ -30,3 +30,7 @@ Fields Section
 Date :- card with all 5 days fields
 
 footer
+
+
+
+Create .env for envoriment variable
