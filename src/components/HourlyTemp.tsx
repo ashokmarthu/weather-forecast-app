@@ -21,8 +21,8 @@ interface ChartData {
 }
 
 export function HourlyTemp({ forecastInfo }: HourlyTemperatureProps) {
-  const chartData: ChartData[] = forecastInfo.list.slice(0, 7).map((item) => ({
-    time: moment(new Date(item.dt * 1000)).format("LT"),
+  const chartData: ChartData[] = forecastInfo.list.slice(0, 8).map((item) => ({
+    time: moment.unix(item.dt).format("LT"),
     temp: Math.round(item.main.temp),
     feels_like: Math.round(item.main.feels_like),
   }));

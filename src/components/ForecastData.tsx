@@ -23,9 +23,8 @@ interface WeatherForecastProps {
   forecastInfo: ForecastData;
 }
 const ForecastData = ({ forecastInfo }: WeatherForecastProps) => {
-  
   const dailyForecasts = forecastInfo.list.reduce((acc, curr) => {
-    const date: string = moment(curr.dt).format("LT");
+    const date: string = moment.unix(curr.dt).format("MMM Do YY");
     if (!acc[date]) {
       acc[date] = {
         temp_max: curr.main.temp_max,
@@ -36,8 +35,8 @@ const ForecastData = ({ forecastInfo }: WeatherForecastProps) => {
         date: curr.dt,
       };
     } else {
-      acc[date].temp_max = Math.max(acc[date].temp_max, curr.main.temp_max)
-      acc[date].temp_min = Math.max(acc[date].temp_min, curr.main.temp_min)
+      acc[date].temp_max = Math.max(acc[date].temp_max, curr.main.temp_max);
+      acc[date].temp_min = Math.max(acc[date].temp_min, curr.main.temp_min);
     }
     return acc;
   }, {} as Record<string, DailyForecast>);
