@@ -1,7 +1,13 @@
-import moment from "moment";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { WeatherData } from "@/api/types";
 import { LuSunrise, LuSunset, LuCompass, LuGauge } from "react-icons/lu";
+import {
+  SUNRISE,
+  SUNSET,
+  WIND_DIRECTION_SPEED,
+  PRESSURE,
+} from "./utils/constants";
+import { getWindDirection, formatDateTime } from "./utils/util";
 
 type weatherDetailsProps = {
   weatherInfo: WeatherData;
@@ -10,49 +16,27 @@ type weatherDetailsProps = {
 const WeatherDetails = ({ weatherInfo }: weatherDetailsProps) => {
   const { wind, sys, main } = weatherInfo;
 
-  function getWindDirection(deg: number, speed: number): string {
-    const directions = [
-      "N",
-      "NNE",
-      "NE",
-      "ENE",
-      "E",
-      "ESE",
-      "SE",
-      "SSE",
-      "S",
-      "SSW",
-      "SW",
-      "WSW",
-      "W",
-      "WNW",
-      "NW",
-      "NNW",
-    ];
-    const index = Math.floor((deg + 11.25) / 22.5);
-    return `${directions[index % 16]} at ${speed} m/s`;
-  }
   const FIELDS = [
     {
-      title: "Sunrise",
-      value: moment.unix(sys.sunrise).format("LT"),
+      title: SUNRISE,
+      value: formatDateTime(sys.sunrise),
       icon: LuSunrise,
       color: "text-orange-500",
     },
     {
-      title: "Sunset",
-      value: moment.unix(sys.sunset).format("LT"),
+      title: SUNSET,
+      value: formatDateTime(sys.sunset),
       icon: LuSunset,
       color: "text-blue-500",
     },
     {
-      title: "Wind direction & Speed",
+      title: WIND_DIRECTION_SPEED,
       value: getWindDirection(wind.deg, wind.speed),
       icon: LuCompass,
       color: "text-green-500",
     },
     {
-      title: "Pressure",
+      title: PRESSURE,
       value: `${main.pressure} hpa`,
       icon: LuGauge,
       color: "text-purpule-500",

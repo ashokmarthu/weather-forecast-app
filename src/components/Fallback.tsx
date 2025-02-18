@@ -5,6 +5,7 @@ type FallbackProps = {
     message: string | null;
   };
 };
+
 const FallbackErrorComponent = ({ error }: FallbackProps) => (
   <div>
     <h1>Oops! Something went wrong.</h1>

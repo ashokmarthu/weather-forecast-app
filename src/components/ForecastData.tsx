@@ -3,6 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { TbDroplets } from "react-icons/tb";
 import { WiStrongWind } from "react-icons/wi";
 import { RiArrowUpDownLine, RiArrowUpDownFill } from "react-icons/ri";
+import type { ForecastData } from "@/api/types";
+import { formatwithDate, formatTemp, formatDate } from "./utils/util";
+
 interface DailyForecast {
   temp_max: number;
   temp_min: number;
@@ -16,15 +19,14 @@ interface DailyForecast {
   };
   date: number;
 }
-import type { ForecastData } from "@/api/types";
-import moment from "moment";
 
 interface WeatherForecastProps {
   forecastInfo: ForecastData;
 }
+
 const ForecastData = ({ forecastInfo }: WeatherForecastProps) => {
   const dailyForecasts = forecastInfo.list.reduce((acc, curr) => {
-    const date: string = moment.unix(curr.dt).format("MMM Do YY");
+    const date: string = formatDate(curr.dt);
     if (!acc[date]) {
       acc[date] = {
         temp_max: curr.main.temp_max,
@@ -42,8 +44,6 @@ const ForecastData = ({ forecastInfo }: WeatherForecastProps) => {
   }, {} as Record<string, DailyForecast>);
   const nextDays = Object.values(dailyForecasts).slice(1, 6);
 
-  // Format temperature
-  const formatTemp = (temp: number) => `${Math.round(temp)}°`;
   return (
     <Card>
       <CardHeader>
@@ -57,9 +57,7 @@ const ForecastData = ({ forecastInfo }: WeatherForecastProps) => {
               className="grid lg:grid-cols-3 items-center gap-4 rounded-lg border p-4"
             >
               <div className="flex justify-center lg:justify-start gap-4">
-                <p className="font-medium">
-                  {moment.unix(day.date).format("L")}
-                </p>
+                <p className="font-medium">{formatwithDate(day.date)}</p>
                 <p className="text-sm text-muted-foreground capitalize">
                   {day.weather.description}
                 </p>

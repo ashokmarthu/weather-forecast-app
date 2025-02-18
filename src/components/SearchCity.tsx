@@ -11,6 +11,8 @@ import { setWeatherData, setWeatherDataError } from "@/store/weatherDataSlice";
 import React, { useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
+import { NO_DATA_FOUND } from "./utils/constants";
+
 
 const SearchCity = () => {
   const dispatch = useDispatch();
@@ -42,7 +44,7 @@ const SearchCity = () => {
             });
           dispatch(setSearchLoading(false));
         } else {
-          dispatch(setSearchError("No data found for the city"));
+          dispatch(setSearchError(NO_DATA_FOUND));
           dispatch(setSearchLoading(false));
         }
       })
@@ -58,6 +60,7 @@ const SearchCity = () => {
     dispatch(setCityName(cityname));
     getResponse();
   };
+
   return (
     <>
       <div>

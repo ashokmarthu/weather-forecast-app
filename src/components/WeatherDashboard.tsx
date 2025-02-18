@@ -15,6 +15,7 @@ import { setUnitConversion } from "@/store/userSelectionSlice";
 import SearchCity from "./SearchCity";
 import SearchByOptions from "./SearchByOptions";
 import Offline from "./Offline";
+
 interface Props {
   weatherRes: WeatherData | null;
   foreCastRes: FCast | null;

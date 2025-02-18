@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 const Navigation = () => {
   const unitType = useSelector((store: RootState) => store.userSelection.units);
   const dispatch = useDispatch();
+  
   const userLocation = () => {
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
@@ -68,11 +69,9 @@ const Navigation = () => {
   };
 
   return (
-    <div>
-      <button onClick={handleChange}>
-        <MdMyLocation className="w-8 h-8" />
-      </button>
-    </div>
+    <button onClick={handleChange}>
+      <MdMyLocation className="w-8 h-8" />
+    </button>
   );
 };
 

@@ -8,7 +8,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import type { ForecastData } from "@/api/types";
-import moment from "moment";
+import { formatDateTime } from "./utils/util";
 
 interface HourlyTemperatureProps {
   forecastInfo: ForecastData;
@@ -22,7 +22,7 @@ interface ChartData {
 
 export function HourlyTemp({ forecastInfo }: HourlyTemperatureProps) {
   const chartData: ChartData[] = forecastInfo.list.slice(0, 8).map((item) => ({
-    time: moment.unix(item.dt).format("LT"),
+    time: formatDateTime(item.dt),
     temp: Math.round(item.main.temp),
     feels_like: Math.round(item.main.feels_like),
   }));

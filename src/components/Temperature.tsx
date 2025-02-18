@@ -2,14 +2,16 @@ import { RootState } from "@/store/store";
 import { setUnitConversion } from "@/store/userSelectionSlice";
 import { TbTemperatureFahrenheit, TbTemperatureCelsius } from "react-icons/tb";
 import { useDispatch, useSelector } from "react-redux";
+import { TEMP_CATEGORIES } from "./utils/constants";
+
 const Temperature = () => {
   const unitType = useSelector((store: RootState) => store.userSelection.units);
   const dispatch = useDispatch();
-  const TEMP_CATEGORIES = ["metric", "imperial"];
 
   const handleTemp = (value: string) => {
     dispatch(setUnitConversion(value));
   };
+
   return (
     <div className="gap-2 flex">
       {TEMP_CATEGORIES.map((type) => (

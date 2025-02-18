@@ -9,12 +9,13 @@ import {
 import { RootState } from "@/store/store";
 import { setSearchByOption } from "@/store/userSelectionSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { SEARCH_BY_OPTIONS } from "./utils/constants";
 
 const SearchByOptions = () => {
   const searchBy = useSelector(
     (store: RootState) => store.userSelection.searchBy
   );
-  const searchByOptions: Array<string> = ["city name", "zip and Countycode"];
+ 
   const dispatch = useDispatch();
   const handleSelectChange = (value: string) => {
     dispatch(setSearchByOption(value));
@@ -27,7 +28,7 @@ const SearchByOptions = () => {
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          {searchByOptions.map((item: string) => (
+          {SEARCH_BY_OPTIONS.map((item: string) => (
             <SelectItem
               key={item}
               value={item}

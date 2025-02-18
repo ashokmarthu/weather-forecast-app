@@ -5,11 +5,13 @@ import { WeatherData } from "@/api/types";
 import { TbDroplets } from "react-icons/tb";
 import { WiStrongWind } from "react-icons/wi";
 import { RiArrowUpDownLine, RiArrowUpDownFill } from "react-icons/ri";
+import { formatTemp } from "./utils/util";
+
 type weatherDetailsProps = {
   weatherInfo: WeatherData;
   location: string;
 };
-const formatTemp = (temp: number) => `${Math.round(temp)}°`;
+
 const CurrentWeather = ({ weatherInfo, location }: weatherDetailsProps) => {
   const {
     main: { temp, feels_like, temp_min, temp_max, humidity },
