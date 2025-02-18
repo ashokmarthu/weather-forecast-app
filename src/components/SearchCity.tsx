@@ -7,6 +7,7 @@ import {
 import { RootState } from "@/store/store";
 import {
   setCityName,
+  setGeoLocationError,
   setSearchError,
   setSearchLoading,
 } from "@/store/userSelectionSlice";
@@ -56,6 +57,7 @@ const SearchCity = () => {
     dispatch(setSearchError(""));
     dispatch(setWeatherDataError(""));
     dispatch(setForecastDataError(""));
+    dispatch(setGeoLocationError(""));
     try {
       const data: GeocodingResponse | GeocodingResponse[] = await getGeoCode(
         searchText

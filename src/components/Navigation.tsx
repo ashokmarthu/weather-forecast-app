@@ -66,6 +66,8 @@ const Navigation = () => {
   const handleChange = () => {
     dispatch(setGeoLocationError(""));
     dispatch(setSearchError(""));
+    dispatch(setForecastDataError(""));
+    dispatch(setWeatherDataError(""));
     dispatch(setGeoLocationLoader(true));
     userLocation();
   };
