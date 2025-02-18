@@ -7,6 +7,7 @@ import { RootState } from "@/store/store";
 import {
   setGeoLocationError,
   setGeoLocationLoader,
+  setSearchError,
 } from "@/store/userSelectionSlice";
 import { setWeatherData, setWeatherDataError } from "@/store/weatherDataSlice";
 import React from "react";
@@ -16,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 const Navigation = () => {
   const unitType = useSelector((store: RootState) => store.userSelection.units);
   const dispatch = useDispatch();
-  
+
   const userLocation = () => {
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
@@ -64,6 +65,7 @@ const Navigation = () => {
 
   const handleChange = () => {
     dispatch(setGeoLocationError(""));
+    dispatch(setSearchError(""));
     dispatch(setGeoLocationLoader(true));
     userLocation();
   };

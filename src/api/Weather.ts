@@ -46,7 +46,7 @@ class WeatherAPI {
     return this.fetchData<ForecastData>(url);
   }
 
-  async getGeoCode(
+  async getGeoCodeByCityName(
     cityname: string,
     units: string
   ): Promise<GeocodingResponse[]> {
@@ -57,6 +57,17 @@ class WeatherAPI {
       limit: "1",
     });
     return this.fetchData<GeocodingResponse[]>(url);
+  }
+  async getGeoCodeByPinCode(
+    pincode: string,
+    units: string
+  ): Promise<GeocodingResponse> {
+    const url = this.createUrl(`${process.env.NEXT_PUBLIC_GEO}/zip`, {
+      zip: pincode,
+      units: units,
+      limit: "1",
+    });
+    return this.fetchData<GeocodingResponse>(url);
   }
 }
 

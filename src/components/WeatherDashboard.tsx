@@ -36,9 +36,13 @@ const WeatherDashboard = ({
   );
   const { forecastData, isForecastDataError, isForecastDataLoading } =
     useSelector((store: RootState) => store.forecastData);
-  const { isGeoLocationLoading, isGeoLocationError } = useSelector(
-    (store: RootState) => store.userSelection
-  );
+  const {
+    isGeoLocationLoading,
+    isGeoLocationError,
+    isSearchLoading,
+    isSearchError,
+  } = useSelector((store: RootState) => store.userSelection);
+
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
@@ -59,14 +63,25 @@ const WeatherDashboard = ({
       dispatch(setUnitConversion(units));
     }
   }, [weatherRes, foreCastRes, hasError, dispatch, units]);
+
+
   if (!isOnline) {
     return <Offline />;
   }
-  if (isWeatherDataLoading || isForecastDataLoading || isGeoLocationLoading) {
+
+  if (
+    isWeatherDataLoading ||
+    isForecastDataLoading ||
+    isGeoLocationLoading ||
+    isSearchLoading
+  ) {
     return <Skeleton />;
   }
 
-  if (isWeatherDataError) {
+  
+  if (isSearchError) {
+    return <Snackbar errMsg={isSearchError} />;
+  } else if (isWeatherDataError) {
     return <Snackbar errMsg={isWeatherDataError} />;
   } else if (isForecastDataError) {
     return <Snackbar errMsg={isForecastDataError} />;

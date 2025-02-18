@@ -1,6 +1,6 @@
-"use client"
-import FallbackErrorComponent from '@/components/Fallback';
-import React, { Component, ReactNode } from 'react';
+"use client";
+import FallbackErrorComponent from "@/components/Fallback";
+import React, { Component, ReactNode } from "react";
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -22,15 +22,17 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-    console.error('Error caught by Error Boundary:', error, errorInfo);
+    console.error("Error caught by Error Boundary:", error, errorInfo);
   }
 
   render(): ReactNode {
     if (this.state.hasError) {
       return (
-        <FallbackErrorComponent error={{
-              message: this.state.errorMsg
-          }} />
+        <FallbackErrorComponent
+          error={{
+            message: this.state.errorMsg,
+          }}
+        />
       );
     }
 
