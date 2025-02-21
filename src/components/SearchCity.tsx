@@ -98,7 +98,7 @@ const SearchCity = () => {
             onChange={(e) => setSearchText(e.target.value)}
           />
           <button
-            className="h-full bg-blue-400/20 rounded w-7 disabled:bg-gray-400/20 absolute"
+            className="h-full bg-blue-400/20 rounded w-7 disabled:bg-gray-400/20 absolute cursor-pointer"
             disabled={searchText.trim().length === 0}
             onClick={handleCityName}
           >

@@ -43,11 +43,11 @@ export function HourlyTemp({ forecastInfo }: HourlyTemperatureProps) {
                 axisLine={false}
               />
               <YAxis
-                dataKey="temp"
                 stroke="#888888"
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
+                tickFormatter={(value) => `${value}°`}
               />
               <Tooltip
                 content={({ active, payload }) => {
