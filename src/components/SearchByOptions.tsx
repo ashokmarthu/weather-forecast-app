@@ -23,7 +23,7 @@ const SearchByOptions = () => {
 
   return (
     <Select value={searchBy} onValueChange={handleSelectChange}>
-      <SelectTrigger className="w-[200px] capitalize outline-none ring-0 focus-visible:ring-offset-0 focus-visible:ring-0">
+      <SelectTrigger className="capitalize outline-none ring-0 focus:ring-offset-0 focus:ring-0 focus:outline-none">
         <SelectValue placeholder="Select a search category" />
       </SelectTrigger>
       <SelectContent>

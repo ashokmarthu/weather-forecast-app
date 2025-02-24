@@ -1,17 +1,13 @@
 import { GeocodingResponse } from "@/api/types";
 import { weatherAPI } from "@/api/Weather";
-import {
-  setForecastData,
-  setForecastDataError,
-} from "@/store/forecastDataSlice";
 import { RootState } from "@/store/store";
+import { setCityName } from "@/store/userSelectionSlice";
 import {
-  setCityName,
-  setGeoLocationError,
-  setSearchError,
-  setSearchLoading,
-} from "@/store/userSelectionSlice";
-import { setWeatherData, setWeatherDataError } from "@/store/weatherDataSlice";
+  setWeatherData,
+  setForecastData,
+  setLoading,
+  setError,
+} from "@/store/weatherDataSlice";
 import React, { useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,45 +15,39 @@ import { NO_DATA_FOUND } from "./utils/constants";
 
 const SearchCity = () => {
   const dispatch = useDispatch();
-  const { units, searchBy } = useSelector(
-    (store: RootState) => store.userSelection
+  const searchBy = useSelector(
+    (store: RootState) => store.userSelection.searchBy
   );
   const [searchText, setSearchText] = useState<string>("");
 
   const handleError = (err: unknown) => {
-    dispatch(setSearchError(`${err}`));
-    dispatch(setWeatherDataError(`${err}`));
-    dispatch(setForecastDataError(`${err}`));
-    dispatch(setSearchLoading(false));
+    dispatch(setError(`${err}`));
   };
 
   const fetchWeatherData = (coords: { lat: number; lon: number }) => {
     Promise.all([
-      weatherAPI.getCurrentWeather(coords, units),
-      weatherAPI.getForecast(coords, units),
+      weatherAPI.getCurrentWeather(coords),
+      weatherAPI.getForecast(coords),
     ])
       .then(([weatherRes, forecastRes]) => {
         dispatch(setWeatherData(weatherRes));
         dispatch(setForecastData(forecastRes));
-        dispatch(setSearchLoading(false));
       })
       .catch(handleError);
+    dispatch(setLoading(false));
   };
 
   const getGeoCode = (search: string) => {
-    if (searchBy === "city name") {
-      return weatherAPI.getGeoCodeByCityName(search, units);
+    if (searchBy === "cityName") {
+      return weatherAPI.getGeoCodeByCityName(search);
     } else {
-      return weatherAPI.getGeoCodeByPinCode(search, units);
+      return weatherAPI.getGeoCodeByPinCode(search);
     }
   };
 
   const getResponse = async (): Promise<void> => {
-    dispatch(setSearchLoading(true));
-    dispatch(setSearchError(""));
-    dispatch(setWeatherDataError(""));
-    dispatch(setForecastDataError(""));
-    dispatch(setGeoLocationError(""));
+    dispatch(setLoading(true));
+    dispatch(setError(""));
     try {
       const data: GeocodingResponse | GeocodingResponse[] = await getGeoCode(
         searchText
@@ -69,9 +59,9 @@ const SearchCity = () => {
         const { lat, lon } = data;
         fetchWeatherData({ lat, lon });
       } else {
-        dispatch(setSearchError(NO_DATA_FOUND));
+        dispatch(setError(NO_DATA_FOUND));
       }
-      dispatch(setSearchLoading(false));
+      dispatch(setLoading(false));
     } catch (err) {
       handleError(err);
     }
@@ -84,34 +74,26 @@ const SearchCity = () => {
 
   return (
     <>
-      <div>
-        <div className="relative flex justify-end items-center w-full">
-          <input
-            placeholder={`${
-              searchBy === "city name"
-                ? "Please search by city name (Ex:- Bengaluru)"
-                : "Search By comma separated pincode and countrycode (Ex:- Newyork,US)"
-            }`}
-            value={searchText}
-            className="h-10 text-xs outline-none border px-2 shadow bg-gray-400/20 rounded w-full pr-8"
-            maxLength={40}
-            onChange={(e) => setSearchText(e.target.value)}
-          />
-          <button
-            className="h-full bg-blue-400/20 rounded w-7 disabled:bg-gray-400/20 absolute cursor-pointer"
-            disabled={searchText.trim().length === 0}
-            onClick={handleCityName}
-          >
-            <IoSearchOutline className="w-8 h-8 px-2" />
-          </button>
-        </div>
-        <small
-          className={`text-muted-foreground ${
-            searchText.length === 40 ? "text-red-500/90" : ""
+      <div className="relative flex justify-end items-center w-full">
+        <input
+          placeholder={`${
+            searchBy === "cityName"
+              ? "Please search by cityName (Ex:- Bengaluru)"
+              : "Search By comma separated pincode and countrycod (Ex:- 560001,IN)"
           }`}
+          value={searchText}
+          className="h-10 text-xs outline-none border px-2 shadow bg-gray-400/20 rounded w-full pr-8"
+          maxLength={40}
+          onChange={(e) => setSearchText(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleCityName()}
+        />
+        <button
+          className="h-full bg-blue-400/20 rounded w-7 disabled:bg-gray-400/20 absolute cursor-pointer"
+          disabled={searchText.trim().length === 0}
+          onClick={handleCityName}
         >
-          Maximum 40 Characters Allowed
-        </small>
+          <IoSearchOutline className="w-8 h-8 px-2" />
+        </button>
       </div>
     </>
   );

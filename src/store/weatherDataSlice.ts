@@ -1,17 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { WeatherData } from "@/api/types";
+import { ForecastData, WeatherData } from "@/api/types";
 
 interface State {
   weatherData: WeatherData | null;
-  isWeatherDataLoading: boolean;
-  isWeatherDataError: string;
+  forecastData: ForecastData | null;
+  isLoading: boolean;
+  isError: string;
 }
 
 const initialState: State = {
+  isLoading: false,
+  isError: "",
   weatherData: null,
-  isWeatherDataLoading: false,
-  isWeatherDataError: "",
+  forecastData: null,
 };
 
 const weatherData = createSlice({
@@ -19,18 +21,20 @@ const weatherData = createSlice({
   initialState,
   reducers: {
     setWeatherData: (state, action: PayloadAction<WeatherData>) => {
-      console.log(action.payload)
       state.weatherData = action.payload;
     },
-    setWeatherInfoLoading: (state, action: PayloadAction<boolean>) => {
-      state.isWeatherDataLoading = action.payload;
+    setForecastData: (state, action: PayloadAction<ForecastData>) => {
+      state.forecastData = action.payload;
     },
-    setWeatherDataError: (state, action: PayloadAction<string>) => {
-      state.isWeatherDataError = action.payload;
+    setError: (state, action: PayloadAction<string>) => {
+      state.isError = action.payload;
+    },
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload;
     },
   },
 });
 
-export const { setWeatherData, setWeatherInfoLoading, setWeatherDataError } =
+export const { setWeatherData, setForecastData, setLoading, setError } =
   weatherData.actions;
 export default weatherData.reducer;

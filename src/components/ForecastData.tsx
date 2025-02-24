@@ -5,6 +5,8 @@ import { WiStrongWind } from "react-icons/wi";
 import { RiArrowUpDownLine, RiArrowUpDownFill } from "react-icons/ri";
 import type { ForecastData } from "@/api/types";
 import { formatwithDate, formatTemp, formatDate } from "./utils/util";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 interface DailyForecast {
   temp_max: number;
@@ -25,6 +27,7 @@ interface WeatherForecastProps {
 }
 
 const ForecastData = ({ forecastInfo }: WeatherForecastProps) => {
+  const units = useSelector((store: RootState) => store.userSelection.units);
   const dailyForecasts = forecastInfo.list.reduce((acc, curr) => {
     const date: string = formatDate(curr.dt);
     if (!acc[date]) {
@@ -66,12 +69,12 @@ const ForecastData = ({ forecastInfo }: WeatherForecastProps) => {
               <div className="flex justify-center gap-4">
                 <span className="flex items-center gap-1 text-blue-500">
                   <RiArrowUpDownFill className="h-8 w-8" />
-                  {formatTemp(day.temp_min)}
+                  {formatTemp(day.temp_min, units)}
                 </span>
 
                 <span className="flex items-center gap-1 text-red-500">
                   <RiArrowUpDownLine className="h-8 w-8" />
-                  {formatTemp(day.temp_max)}
+                  {formatTemp(day.temp_max, units)}
                 </span>
               </div>
 

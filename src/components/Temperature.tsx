@@ -18,18 +18,18 @@ const Temperature = () => {
         <button
           key={type}
           onClick={() => handleTemp(type)}
-          className="p-2 rounded-md border-b shadow-inner"
+          className="z-2 p-2 rounded-md bg-blue-400 ring-2 ring-offset-white"
         >
           {type === "metric" ? (
             <TbTemperatureCelsius
               className={`${
-                unitType === type ? "text-green-400" : "text-black-200"
+                unitType === type ? "text-green-400" : ""
               } h-5 w-5`}
             />
           ) : (
             <TbTemperatureFahrenheit
               className={`${
-                unitType === type ? "text-green-400" : "text-black-200"
+                unitType === type ? "text-green-400" : ""
               } h-5 w-5`}
             />
           )}

@@ -1,27 +1,27 @@
+import { Coordinates } from "@/api/types";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-type UserSeletions = {
-  searchBy: string;
-  units: string;
-  favourites: [];
-  city: string;
-  isGeoLocationError: string;
-  isGeoLocationLoading: boolean;
-  isSearchLoading: boolean;
-  isSearchError: string;
+type Favourite = {
+  id?: number;
+  lat: number;
+  lon: number;
 };
 
-const initialState: UserSeletions = {
-  isGeoLocationError: "",
-  isGeoLocationLoading: false,
-  isSearchLoading: false,
-  isSearchError: "",
-  searchBy: "city name",
-  units: "",
+type UserSelections = {
+  searchBy: string;
+  units: string;
+  favourites: Favourite[];
+  city: string;
+};
+
+const initialState: UserSelections = {
+  searchBy: "cityName",
+  units: "metric",
   favourites: [],
   city: "",
 };
+
 const userSelection = createSlice({
   name: "userSelection",
   initialState,
@@ -32,23 +32,20 @@ const userSelection = createSlice({
     setUnitConversion: (state, action: PayloadAction<string>) => {
       state.units = action.payload;
     },
-    setUserFavourites: (state, action: PayloadAction<[]>) => {
-      state.favourites = action.payload;
+    setUserFavourites: (state, action: PayloadAction<Favourite>) => {
+      state.favourites = [
+        ...state.favourites,
+        { id: Date.now(), ...action.payload },
+      ];
     },
     setCityName: (state, action: PayloadAction<string>) => {
       state.city = action.payload;
     },
-    setGeoLocationError: (state, action: PayloadAction<string>) => {
-      state.isGeoLocationError = action.payload;
-    },
-    setGeoLocationLoader: (state, action: PayloadAction<boolean>) => {
-      state.isGeoLocationLoading = action.payload;
-    },
-    setSearchLoading: (state, action: PayloadAction<boolean>) => {
-      state.isSearchLoading = action.payload;
-    },
-    setSearchError: (state, action: PayloadAction<string>) => {
-      state.isSearchError = action.payload;
+    removeFromFavourites: (state, action: PayloadAction<Coordinates>) => {
+      state.favourites = state.favourites.filter(
+        (city) =>
+          city.lat !== action.payload.lat && city.lon !== action.payload.lon
+      );
     },
   },
 });
@@ -57,10 +54,8 @@ export const {
   setSearchByOption,
   setUnitConversion,
   setUserFavourites,
-  setGeoLocationError,
-  setGeoLocationLoader,
-  setSearchLoading,
-  setSearchError,
   setCityName,
+  removeFromFavourites,
 } = userSelection.actions;
+
 export default userSelection.reducer;

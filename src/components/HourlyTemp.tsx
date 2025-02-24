@@ -8,7 +8,9 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import type { ForecastData } from "@/api/types";
-import { formatDateTime } from "./utils/util";
+import { formatDateTime, formatTemp } from "./utils/util";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 interface HourlyTemperatureProps {
   forecastInfo: ForecastData;
@@ -21,11 +23,13 @@ interface ChartData {
 }
 
 export function HourlyTemp({ forecastInfo }: HourlyTemperatureProps) {
+  const units = useSelector((store: RootState) => store.userSelection.units);
   const chartData: ChartData[] = forecastInfo.list.slice(0, 8).map((item) => ({
     time: formatDateTime(item.dt),
-    temp: Math.round(item.main.temp),
-    feels_like: Math.round(item.main.feels_like),
+    temp: formatTemp(item.main.temp, units, true) as number,
+    feels_like: formatTemp(item.main.feels_like, units, true) as number,
   }));
+
   return (
     <Card className="flex-1">
       <CardHeader>

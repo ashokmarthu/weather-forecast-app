@@ -6,113 +6,73 @@ import Skeleton from "./Skeleton";
 import { Snackbar } from "./SnackBar";
 import ForecastData from "./ForecastData";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { WeatherData, ForecastData as FCast } from "@/api/types";
-import { setWeatherData } from "@/store/weatherDataSlice";
+import { setForecastData, setWeatherData } from "@/store/weatherDataSlice";
 import { RootState } from "@/store/store";
-import { setForecastData } from "@/store/forecastDataSlice";
-import { setUnitConversion } from "@/store/userSelectionSlice";
-import SearchCity from "./SearchCity";
-import SearchByOptions from "./SearchByOptions";
 import Offline from "./Offline";
+import useStatus from "@/hooks/useStatus";
+import FavouriteLocations from "./FavouriteLocations";
+import MarkFavourite from "./MarkFavourite";
 
 interface Props {
   weatherRes: WeatherData | null;
   foreCastRes: FCast | null;
   hasError: string;
-  units: string;
 }
 
-const WeatherDashboard = ({
-  weatherRes,
-  foreCastRes,
-  hasError,
-  units,
-}: Props) => {
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
+const WeatherDashboard = ({ weatherRes, foreCastRes, hasError }: Props) => {
   const dispatch = useDispatch();
-  const { weatherData, isWeatherDataLoading, isWeatherDataError } = useSelector(
+  const { weatherData, forecastData, isLoading, isError } = useSelector(
     (store: RootState) => store.weatherData
   );
-  const { forecastData, isForecastDataError, isForecastDataLoading } =
-    useSelector((store: RootState) => store.forecastData);
-  const {
-    isGeoLocationLoading,
-    isGeoLocationError,
-    isSearchLoading,
-    isSearchError,
-  } = useSelector((store: RootState) => store.userSelection);
-
-  useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
-
-    return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
-    };
-  }, [isOnline]);
+  const userStatus = useStatus();
 
   useEffect(() => {
     if (weatherRes && foreCastRes) {
       dispatch(setWeatherData(weatherRes));
       dispatch(setForecastData(foreCastRes));
-      dispatch(setUnitConversion(units));
     }
-  }, [weatherRes, foreCastRes, hasError, dispatch, units]);
+  }, [weatherRes, foreCastRes, dispatch]);
 
-
-  if (!isOnline) {
+  if (!userStatus) {
     return <Offline />;
   }
 
-  if (
-    isWeatherDataLoading ||
-    isForecastDataLoading ||
-    isGeoLocationLoading ||
-    isSearchLoading
-  ) {
+  if (isLoading) {
     return <Skeleton />;
   }
 
-  
-  if (isSearchError) {
-    return <Snackbar errMsg={isSearchError} />;
-  } else if (isWeatherDataError) {
-    return <Snackbar errMsg={isWeatherDataError} />;
-  } else if (isForecastDataError) {
-    return <Snackbar errMsg={isForecastDataError} />;
-  } else if (isGeoLocationError) {
-    return <Snackbar errMsg={isGeoLocationError} />;
-  } else if (hasError) {
-    return <Snackbar errMsg={hasError} />;
+  if (isError || hasError) {
+    return <Snackbar errMsg={isError || hasError} />;
   }
 
-  return weatherData && forecastData ? (
-    <div className="space-y-2">
-      <div className="grid gap-6 md:grid-cols-2">
-        <SearchCity />
-        <SearchByOptions />
+  return (
+    <div>
+      <div className="py-2">
+        <FavouriteLocations />
       </div>
-      <div className="grid gap-6 md:grid-cols-2">
-        <div className="space-y-4">
-          <CurrentWeather
-            weatherInfo={weatherData}
-            location={weatherData.name}
-          />
-          <WeatherDetails weatherInfo={weatherData} />
+      {weatherData && forecastData ? (
+        <div className="space-y-2">
+          <MarkFavourite coordinates={weatherData.coord} />
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-4">
+              <CurrentWeather
+                weatherInfo={weatherData}
+              />
+              <WeatherDetails weatherInfo={weatherData} />
+            </div>
+            <div className="space-y-4">
+              <HourlyTemp forecastInfo={forecastData} />
+              <ForecastData forecastInfo={forecastData} />
+            </div>
+          </div>
         </div>
-        <div className="space-y-4">
-          <HourlyTemp forecastInfo={forecastData} />
-          <ForecastData forecastInfo={forecastData} />
-        </div>
-      </div>
+      ) : (
+        <Skeleton />
+      )}
+      ;
     </div>
-  ) : (
-    <Skeleton />
   );
 };
 

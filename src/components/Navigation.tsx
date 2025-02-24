@@ -1,32 +1,24 @@
 import { weatherAPI } from "@/api/Weather";
 import {
+  setError,
   setForecastData,
-  setForecastDataError,
-} from "@/store/forecastDataSlice";
-import { RootState } from "@/store/store";
-import {
-  setGeoLocationError,
-  setGeoLocationLoader,
-  setSearchError,
-} from "@/store/userSelectionSlice";
-import { setWeatherData, setWeatherDataError } from "@/store/weatherDataSlice";
-import React from "react";
+  setLoading,
+  setWeatherData,
+} from "@/store/weatherDataSlice";
 import { MdMyLocation } from "react-icons/md";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const Navigation = () => {
-  const unitType = useSelector((store: RootState) => store.userSelection.units);
   const dispatch = useDispatch();
-
   const userLocation = () => {
     navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const lat = pos.coords.latitude;
-        const lon = pos.coords.longitude;
+      async ({ coords }) => {
+        const lat = coords.latitude;
+        const lon = coords.longitude;
         try {
           const [weatherRes, foreCastRes] = await Promise.all([
-            weatherAPI.getCurrentWeather({ lat, lon }, unitType),
-            weatherAPI.getForecast({ lat, lon }, unitType),
+            weatherAPI.getCurrentWeather({ lat, lon }),
+            weatherAPI.getForecast({ lat, lon }),
           ]);
           dispatch(setWeatherData(weatherRes));
           dispatch(setForecastData(foreCastRes));
@@ -35,10 +27,9 @@ const Navigation = () => {
             error instanceof Error
               ? error.message
               : "An unknown error occurred";
-          dispatch(setWeatherDataError(errorMessage));
-          dispatch(setForecastDataError(errorMessage));
+          dispatch(setError(errorMessage));
         }
-        dispatch(setGeoLocationLoader(false));
+        dispatch(setLoading(false));
       },
       (error) => {
         let errorMessage: string;
@@ -56,25 +47,25 @@ const Navigation = () => {
           default:
             errorMessage = "An unknown error occurred.";
         }
-        dispatch(setGeoLocationError(errorMessage));
-        dispatch(setGeoLocationLoader(false));
+        dispatch(setError(errorMessage));
+        dispatch(setLoading(false));
       },
       { enableHighAccuracy: true, timeout: 5000 }
     );
   };
 
   const handleChange = () => {
-    dispatch(setGeoLocationError(""));
-    dispatch(setSearchError(""));
-    dispatch(setForecastDataError(""));
-    dispatch(setWeatherDataError(""));
-    dispatch(setGeoLocationLoader(true));
+    setLoading(true);
+    setError("");
     userLocation();
   };
 
   return (
-    <button onClick={handleChange}>
-      <MdMyLocation className="w-8 h-8" />
+    <button
+      onClick={handleChange}
+      className="z-2 rounded-xl p-2 bg-blue-400 ring-2 ring-offset-white"
+    >
+      <MdMyLocation className="w-6 h-6" />
     </button>
   );
 };
