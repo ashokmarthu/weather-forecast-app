@@ -2,7 +2,7 @@
 import { TiWeatherPartlySunny } from "react-icons/ti";
 import Temperature from "./Temperature";
 import Navigation from "./Navigation";
-import DarkMode from "./DarkMode";
+import Theme from "./Theme";
 import SearchCity from "./SearchCity";
 import SearchByOptions from "./SearchByOptions";
 
@@ -10,15 +10,16 @@ const Navbar = () => {
   return (
     <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur py-2">
       <div className="grid grid-cols-1 md:grid-cols-2 justify-items-center items-center gap-y-2">
-        <div className="grid grid-cols-1 md:grid-cols-4 justify-items-center items-center gap-y-2 w-full">
-          <div>
-            <TiWeatherPartlySunny className="w-14 h-14" />
+        <div className="grid grid-cols-1 md:grid-cols-5 justify-items-center items-center gap-y-2 w-full">
+          <div className="flex justify-center items-center text-center flex-col">
+            <TiWeatherPartlySunny className="w-7 h-7" />
+            <small className="font-semibold"> Weather Forecast</small>
           </div>
           <div>
             <Navigation />
           </div>
-          <div>
-            <DarkMode />
+          <div className="md:col-span-2">
+            <Theme />
           </div>
           <div>
             <Temperature />

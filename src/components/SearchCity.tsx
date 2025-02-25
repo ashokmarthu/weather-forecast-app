@@ -82,8 +82,8 @@ const SearchCity = () => {
         <input
           placeholder={`${
             searchBy === "cityName"
-              ? "Please search by cityName (Ex:- Bengaluru)"
-              : "Search By comma separated pincode and countrycod (Ex:- 560001,IN)"
+              ? "Enter a cityName (Ex:- Bengaluru)"
+              : "Enter comma separated pincode and countrycode (Ex:- 560001,IN)"
           }`}
           value={searchText}
           className="h-10 text-xs outline-none border px-2 shadow bg-gray-400/20 rounded w-full pr-8"

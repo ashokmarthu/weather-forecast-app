@@ -36,7 +36,7 @@ const MarkFavourite = ({ coordinates }: MarkFavouriteProps) => {
   };
 
   return (
-    <div className="flex gap-2 justify-end">
+    <div className="flex gap-2 md:justify-end">
       <h1 className="text-xl font-bold tracking-tight">Mark as Favorite</h1>
       <button
         className={`hover:text-yellow-600 ${
@@ -44,10 +44,10 @@ const MarkFavourite = ({ coordinates }: MarkFavouriteProps) => {
         }`}
         onClick={handleClick}
       >
-        {!isSelected ? (
-          <CiStar className="h-6 w-6" />
-        ) : (
+        {isSelected ? (
           <FaStar className="h-6 w-6 fill-yellow-400" />
+        ) : (
+          <CiStar className="h-6 w-6" />
         )}
       </button>
     </div>

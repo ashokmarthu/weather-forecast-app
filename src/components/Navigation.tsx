@@ -5,7 +5,7 @@ import {
   setLoading,
   setWeatherData,
 } from "@/store/weatherDataSlice";
-import { MdMyLocation } from "react-icons/md";
+import { CiLocationOn } from "react-icons/ci";
 import { useDispatch } from "react-redux";
 
 const Navigation = () => {
@@ -63,9 +63,9 @@ const Navigation = () => {
   return (
     <button
       onClick={handleChange}
-      className="z-2 rounded-xl p-2 bg-blue-400 ring-2 ring-offset-white"
+      className="z-2 rounded-full p-1 ring-2 ring-offset-white"
     >
-      <MdMyLocation className="w-6 h-6" />
+      <CiLocationOn className="w-6 h-6" />
     </button>
   );
 };

@@ -2,40 +2,43 @@ import { RootState } from "@/store/store";
 import { setUnitConversion } from "@/store/userSelectionSlice";
 import { TbTemperatureFahrenheit, TbTemperatureCelsius } from "react-icons/tb";
 import { useDispatch, useSelector } from "react-redux";
-import { TEMP_CATEGORIES } from "./utils/constants";
+import { IMPERIAL, METRIC, TEMP_CATEGORIES } from "./utils/constants";
 
 const Temperature = () => {
   const unitType = useSelector((store: RootState) => store.userSelection.units);
   const dispatch = useDispatch();
 
-  const handleTemp = (value: string) => {
-    dispatch(setUnitConversion(value));
+  const handleTemp = () => {
+    dispatch(setUnitConversion(unitType === METRIC ? IMPERIAL : METRIC));
   };
 
   return (
-    <div className="gap-2 flex">
-      {TEMP_CATEGORIES.map((type) => (
-        <button
-          key={type}
-          onClick={() => handleTemp(type)}
-          className="z-2 p-2 rounded-md bg-blue-400 ring-2 ring-offset-white"
-        >
-          {type === "metric" ? (
-            <TbTemperatureCelsius
-              className={`${
-                unitType === type ? "text-green-400" : ""
-              } h-5 w-5`}
-            />
-          ) : (
-            <TbTemperatureFahrenheit
-              className={`${
-                unitType === type ? "text-green-400" : ""
-              } h-5 w-5`}
-            />
-          )}
-        </button>
-      ))}
-    </div>
+    <>
+      <label className="shadow rounded relative inline-flex cursor-pointer select-none items-center">
+        <input
+          type="checkbox"
+          checked={unitType === METRIC}
+          className="sr-only"
+          onChange={() => handleTemp()}
+        />
+        <div className="shadow-card flex h-[40px] w-[70px] items-center justify-center rounded-md bg-white dark:bg-[#212b36] divide-x-3">
+          {TEMP_CATEGORIES.map((temp) => (
+            <span
+              className={`flex h-8 w-8 items-center justify-center rounded ${
+                unitType === temp ? "bg-blue-300" : ""
+              }`}
+              key={temp}
+            >
+              {temp === METRIC ? (
+                <TbTemperatureCelsius />
+              ) : (
+                <TbTemperatureFahrenheit />
+              )}
+            </span>
+          ))}
+        </div>
+      </label>
+    </>
   );
 };
 
