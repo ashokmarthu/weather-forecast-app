@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
-import { DIRECTIONS } from "./constants";
+import { DIRECTIONS, IMPERIAL } from "./constants";
 
 dayjs.extend(localizedFormat);
 
@@ -18,8 +18,8 @@ const formatTemp = (
   unit: string,
   isNumberFormat: boolean = false
 ): string | number => {
-  const temp =
-    unit === "imperial" ? ((kelvin - 273.15) * 9) / 5 + 32 : kelvin - 273.15;
+  const isImperial = unit === IMPERIAL;
+  const temp = isImperial ? ((kelvin - 273.15) * 9) / 5 + 32 : kelvin - 273.15;
   return isNumberFormat ? Math.round(temp).toString() : `${Math.round(temp)}°`;
 };
 

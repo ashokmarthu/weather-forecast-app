@@ -19,7 +19,7 @@ const Theme = () => {
           Light
         </span>
         <span
-          className={`slider mx-4 flex h-8 w-[60px] items-center rounded-full p-1 duration-200 ${
+          className={`mx-4 flex h-8 w-[60px] items-center rounded-full p-1 duration-200 ${
             isChecked ? "bg-[#212b36]" : "bg-[#CCCCCE]"
           }`}
         >

@@ -2,10 +2,21 @@ import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import useWeather from "@/hooks/useWeather";
 import { RootState } from "@/store/store";
-import { removeFromFavourites } from "@/store/userSelectionSlice";
+import {
+  removeFromFavourites,
+  setCoordinates,
+} from "@/store/userSelectionSlice";
 import { AiOutlineLoading } from "react-icons/ai";
 import { RxCross1 } from "react-icons/rx";
 import { formatTemp } from "./utils/util";
+import { weatherAPI } from "@/api/Weather";
+import {
+  setError,
+  setForecastData,
+  setLoading,
+  setWeatherData,
+} from "@/store/weatherDataSlice";
+import { Coordinates } from "@/api/types";
 
 interface FavoriteCity {
   lat: number;
@@ -16,15 +27,35 @@ const FavouriteCity = ({ lat, lon }: FavoriteCity) => {
   const { isLoading, weather } = useWeather({ lat, lon });
   const units = useSelector((store: RootState) => store.userSelection.units);
   const dispatch = useDispatch();
+
+  const getData = async (coord: Coordinates) => {
+    dispatch(setLoading(true));
+    try {
+      const [weatherRes, foreCastRes] = await Promise.all([
+        weatherAPI.getCurrentWeather(coord),
+        weatherAPI.getForecast(coord),
+      ]);
+      dispatch(setCoordinates(coord));
+      dispatch(setWeatherData(weatherRes));
+      dispatch(setForecastData(foreCastRes));
+    } catch (e) {
+      dispatch(setError(`${e}`));
+    }
+    dispatch(setLoading(false));
+  };
+
   return (
     <div
       className="relative flex min-w-[250px] cursor-pointer items-center gap-3 rounded-lg border bg-card p-4 pr-8 shadow-sm transition-all hover:shadow-md"
       role="button"
-      tabIndex={0}
+      onClick={() => {
+        getData({ lat, lon });
+      }}
     >
       <button
         className="absolute right-1 top-1 h-6 w-6 rounded-full p-0  hover:text-red-300 group-hover:opacity-100"
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           dispatch(removeFromFavourites({ lat, lon }));
         }}
       >

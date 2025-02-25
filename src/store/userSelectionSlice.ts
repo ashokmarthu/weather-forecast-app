@@ -13,6 +13,7 @@ type UserSelections = {
   units: string;
   favourites: Favourite[];
   city: string;
+  coord: Favourite | null;
 };
 
 const initialState: UserSelections = {
@@ -20,6 +21,7 @@ const initialState: UserSelections = {
   units: "metric",
   favourites: [],
   city: "",
+  coord: null,
 };
 
 const userSelection = createSlice({
@@ -41,6 +43,9 @@ const userSelection = createSlice({
     setCityName: (state, action: PayloadAction<string>) => {
       state.city = action.payload;
     },
+    setCoordinates: (state, action: PayloadAction<Coordinates>) => {
+      state.coord = action.payload;
+    },
     removeFromFavourites: (state, action: PayloadAction<Coordinates>) => {
       state.favourites = state.favourites.filter(
         (city) =>
@@ -55,6 +60,7 @@ export const {
   setUnitConversion,
   setUserFavourites,
   setCityName,
+  setCoordinates,
   removeFromFavourites,
 } = userSelection.actions;
 

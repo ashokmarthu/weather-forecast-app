@@ -11,7 +11,7 @@ const FavouriteLocations = () => {
   return favorites.length ? (
     <>
       <h1 className="text-xl font-bold tracking-tight py-1">Favorites</h1>
-      <ScrollArea className="w-full pb-4">
+      <ScrollArea className="w-full">
         <div className="flex gap-4">
           {favorites.map((city) => (
             <FavouriteCity key={city.id} {...city} />

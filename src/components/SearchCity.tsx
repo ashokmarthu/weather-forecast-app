@@ -1,7 +1,7 @@
 import { GeocodingResponse } from "@/api/types";
 import { weatherAPI } from "@/api/Weather";
 import { RootState } from "@/store/store";
-import { setCityName } from "@/store/userSelectionSlice";
+import { setCityName, setCoordinates } from "@/store/userSelectionSlice";
 import {
   setWeatherData,
   setForecastData,
@@ -34,6 +34,7 @@ const SearchCity = () => {
       weatherAPI.getForecast(coords),
     ])
       .then(([weatherRes, forecastRes]) => {
+        dispatch(setCoordinates(coords));
         dispatch(setWeatherData(weatherRes));
         dispatch(setForecastData(forecastRes));
       })
