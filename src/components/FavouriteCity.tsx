@@ -1,9 +1,11 @@
-import useWeather from "@/hooks/useWeather";
-import { removeFromFavourites } from "@/store/userSelectionSlice";
 import Image from "next/image";
+import { useDispatch, useSelector } from "react-redux";
+import useWeather from "@/hooks/useWeather";
+import { RootState } from "@/store/store";
+import { removeFromFavourites } from "@/store/userSelectionSlice";
 import { AiOutlineLoading } from "react-icons/ai";
 import { RxCross1 } from "react-icons/rx";
-import { useDispatch } from "react-redux";
+import { formatTemp } from "./utils/util";
 
 interface FavoriteCity {
   lat: number;
@@ -12,6 +14,7 @@ interface FavoriteCity {
 
 const FavouriteCity = ({ lat, lon }: FavoriteCity) => {
   const { isLoading, weather } = useWeather({ lat, lon });
+  const units = useSelector((store: RootState) => store.userSelection.units);
   const dispatch = useDispatch();
   return (
     <div
@@ -36,6 +39,8 @@ const FavouriteCity = ({ lat, lon }: FavoriteCity) => {
         <>
           <div className="flex items-center gap-2">
             <Image
+              width={100}
+              height={100}
               src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}.png`}
               alt={weather.weather[0].description || "weather icon"}
               className="w-8 h-8"
@@ -49,7 +54,7 @@ const FavouriteCity = ({ lat, lon }: FavoriteCity) => {
           </div>
           <div className="ml-auto text-right">
             <p className="text-xl font-bold">
-              {Math.round(weather.main.temp)}°
+              {formatTemp(weather.main.temp, units)}
             </p>
             <p className="text-xs capitalize text-muted-foreground">
               {weather.weather[0].description}

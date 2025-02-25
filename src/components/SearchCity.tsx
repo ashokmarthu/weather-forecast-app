@@ -21,7 +21,11 @@ const SearchCity = () => {
   const [searchText, setSearchText] = useState<string>("");
 
   const handleError = (err: unknown) => {
-    dispatch(setError(`${err}`));
+    if (err instanceof Error) {
+      dispatch(setError(err.message));
+    } else {
+      dispatch(setError("An unknown error occurred"));
+    }
   };
 
   const fetchWeatherData = (coords: { lat: number; lon: number }) => {
@@ -61,10 +65,10 @@ const SearchCity = () => {
       } else {
         dispatch(setError(NO_DATA_FOUND));
       }
-      dispatch(setLoading(false));
     } catch (err) {
       handleError(err);
     }
+    dispatch(setLoading(false));
   };
 
   const handleCityName = () => {
