@@ -5,7 +5,7 @@ const Theme = () => {
   const { theme, setTheme } = useTheme();
   const isChecked = theme === DARK_MODE;
 
-  const handleToggle = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleToggle = () => {
     setTheme((prev) => (prev === LIGHT_MODE ? DARK_MODE : LIGHT_MODE));
   };
 
