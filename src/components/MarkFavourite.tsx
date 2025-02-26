@@ -36,7 +36,7 @@ const MarkFavourite = ({ coordinates }: MarkFavouriteProps) => {
   };
 
   return (
-    <div className="flex gap-2 md:justify-end py-4">
+    <div className="flex gap-2 md:justify-end py-1">
       <h1 className="text-xl font-bold tracking-tight">Mark as Favorite</h1>
       <button
         className={`hover:text-yellow-600 ${

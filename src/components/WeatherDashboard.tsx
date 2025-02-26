@@ -15,6 +15,7 @@ import {
 import { weatherAPI } from "@/api/Weather";
 import { useEffect } from "react";
 import { Snackbar } from "./SnackBar";
+import FavouriteLocations from "./FavouriteLocations";
 
 interface Props {
   weatherRes: WeatherData | null;
@@ -56,8 +57,9 @@ const WeatherDashboard = ({ weatherRes, foreCastRes, hasError }: Props) => {
   if (!userStatus) return <Offline />;
   if (hasError) return <Snackbar errMsg={hasError} />;
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-2">
       <Navbar />
+      <FavouriteLocations />
       <WeatherContent />
     </div>
   );

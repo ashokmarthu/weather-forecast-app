@@ -7,7 +7,6 @@ import CurrentWeather from "./CurrentWeather";
 import WeatherDetails from "./WeatherDetails";
 import HourlyTemp from "./HourlyTemp";
 import ForecastData from "./ForecastData";
-import FavouriteLocations from "./FavouriteLocations";
 import MarkFavourite from "./MarkFavourite";
 
 const WeatherContent = () => {
@@ -21,7 +20,6 @@ const WeatherContent = () => {
 
   return (
     <div>
-      <FavouriteLocations />
       {dataAvailable ? (
         <div className="space-y-3">
           <MarkFavourite coordinates={weatherData.coord} />

@@ -15,18 +15,21 @@ const Navigation = () => {
   const coord = useSelector((store: RootState) => store.userSelection.coord);
   const dispatch = useDispatch();
 
-  const handleLocationError = useCallback((error: GeolocationPositionError) => {
-    const errorMessages: Record<number, string> = {
-      [error.PERMISSION_DENIED]:
-        "Location permission denied. Please enable location access.",
-      [error.POSITION_UNAVAILABLE]: "Location information is unavailable.",
-      [error.TIMEOUT]: "Location request timed out.",
-    };
-    dispatch(
-      setError(errorMessages[error.code] || "An unknown error occurred")
-    );
-    dispatch(setLoading(false));
-  }, []);
+  const handleLocationError = useCallback(
+    (error: GeolocationPositionError) => {
+      const errorMessages: Record<number, string> = {
+        [error.PERMISSION_DENIED]:
+          "Location permission denied. Please enable location access.",
+        [error.POSITION_UNAVAILABLE]: "Location information is unavailable.",
+        [error.TIMEOUT]: "Location request timed out.",
+      };
+      dispatch(
+        setError(errorMessages[error.code] || "An unknown error occurred")
+      );
+      dispatch(setLoading(false));
+    },
+    [dispatch]
+  );
 
   const handleLocationSuccess = useCallback(
     async ({ coords }: GeolocationPosition) => {
